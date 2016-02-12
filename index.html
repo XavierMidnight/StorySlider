@@ -1,7 +1,161 @@
 <html>
 <head>
+    <script type="text/javascript" >
+    var items = [];
+    var focusedItemId;
+
+
+function setup(){
+  var item = {
+    id:"A",
+    count:0
+    
+};
+items["A"]=item;
+
+var item = {
+    id:"B",
+    count:0
+    
+};
+
+items["B"]=item;
+var item = {
+    id:"C",
+    count:0
+    
+};
+
+items["C"]=item;
+    
+}
+
+function focus(){
+    focusedItemId=id;
+    document.getElementById("info").innerHTML=id+"in focus";
+}
+
+function onBlur(id){
+    increment(id);
+    
+}
+
+
+function increment(id){
+    items[id].count++;
+    document.getElementById(id+"_count").value=items[id].count;
+    if(id=="A" && items[id].count==10){
+        startChicken("A");
+    }else if(id=="B" && items[id].count==5){
+        startTurtle("B");
+    }
+    
+}
+
+function updateUI(){
+    for (var itemId in items) {
+        document.getElementById(itemId+"_count").value=items[itemId].count;
+    }
+}
+ 
+    
+    function remove(index)
+    {
+        var select = document.getElementById('dictionary');       
+        select.remove(index);
+    }
+
+    function startChicken(id){
+        document.getElementById("chicken").style.display="block";
+        setInterval(animateChicken,100);
+    }
+    
+    function startTurtle(id){
+        document.getElementById("turtle").style.display="block";
+        setInterval(animateTurtle,100);
+    }
+    
+    var chickenDirection;
+    function animateChicken(){
+        var item = document.getElementById("chicken");
+        
+        var topVal = parseInt(item.style.top, 10);
+
+        if(topVal>100){
+            item.style.top=(topVal-15)+"px";
+            chickenDirection = "minus";
+            increment("A");
+        }else if(topVal<25){
+            
+            item.style.top=(topVal+15)+"px";
+            chickenDirection = "plus";
+        }else{
+            if(chickenDirection=="minus"){
+                item.style.top=(topVal-15)+"px";    
+            }else{
+                item.style.top=(topVal+15)+"px";
+            }
+        }
+    }
+        
+        var turtleDirection;
+    function animateTurtle(){
+        var item = document.getElementById("turtle");
+        
+        var topVal = parseInt(item.style.top, 10);
+
+        if(topVal>100){
+            item.style.top=(topVal-5)+"px";
+            turtleDirection = "minus";
+            increment("B");
+        }else if(topVal<25){
+            
+            item.style.top=(topVal+5)+"px";
+            turtleDirection = "plus";
+        }else{
+            if(turtleDirection=="minus"){
+                item.style.top=(topVal-5)+"px";    
+            }else{
+                item.style.top=(topVal+5)+"px";
+            }
+        }
+        
+        
+        
+    } 
+         
+        
+    
+    
+    </script>
 </head>
-<body>
-Woohoo!
+<body onload="setup()">
+Story Slider
+<span id="info">Info</span>
+
+</br>
+</br>
+
+
+
+<span id="A" onmouseleave="onBlur(id)">A
+    <input type="text" id="A_count"/>
+</span>
+<span id="B" onmouseleave="onBlur(id)">B
+    <input type="text" id="B_count"/>
+</span>
+<span id="C" onmouseleave="onBlur(id)">C
+    <input type="text" id="C_count"/>
+</span>
+
+<select id="dictionary" size="3">
+  <option>A</option>
+  <option>B</option>
+  <option>C</option>
+</select>
+
+<img id="chicken" src="images/chicken.jpg" style="width:20px;height:20px;left:0px;top:25px;position:absolute;display:none" />
+<img id="turtle" src="images/turtle.jpg" style="width:20px;height:20px;left:155px;top:25px;position:absolute;display:none" />
+
 </body>
 </html>

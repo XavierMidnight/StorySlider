@@ -3,6 +3,57 @@ var items = [];
 
 
 function setup(){
+
+var letterTemplateObject = document.getElementById("letterTemplate");
+var lettersInputButtonsDiv = document.getElementById("letters");
+
+
+for(var i=1;i<=1000;i++){
+    //var letterCharacter=String.fromCharCode(96+i);
+    //var letterCharacter=Math.floor(Math.random()*100);
+    var letterCharacter=String(i);
+  
+    var letterNameObject = document.createElement('span');
+    letterNameObject.id = letterCharacter+"_name";
+    letterNameObject.innerHTML="name:"+letterCharacter+" ";
+    
+    
+    var letterCountObject = document.createElement('span');
+    letterCountObject.id = letterCharacter+"_count";
+    letterCountObject.innerHTML = "Count:0 ";
+    
+    var letterObject = document.createElement('button');
+    letterObject.id = letterCharacter;
+    letterObject.style.width="60px";
+    letterObject.style.height="60px";
+    
+    
+    letterObject.appendChild(letterNameObject);
+    letterObject.appendChild(document.createElement('br'));
+    letterObject.appendChild(letterCountObject);
+    
+    //letterObject.innerHTML = letterNameObject.innerHTML+letterCountObject.innerHTML;
+   
+    letterObject.onmouseleave = 
+    function(){
+        onBlur(this.id);
+        };   
+   
+    document.getElementById("letters").appendChild(letterObject);
+
+    var item = {
+    id:letterCharacter+"_name",
+    count:0
+    };
+    
+    items[String(letterCharacter)]=item;
+} 
+/*
+var xmlString = "<div id='foo'><a href='#'>Link</a><span></span></div>"
+  , parser = new DOMParser()
+  , newLetterOjbect = parser.parseFromString(xmlString, "text/xml");
+*/
+/*    
   var item = {
     id:"A",
     count:0
@@ -71,12 +122,12 @@ function onBlur(id){
 
 function increment(id){
     items[id].count++;
-    document.getElementById(id+"_count").value=items[id].count;
-    if(id=="A" && items[id].count==10){
+    document.getElementById(id+"_count").innerHTML="Count:"+items[id].count;
+    /*if(id=="A" && items[id].count==10){
         startChicken("A");
     }else if(id=="B" && items[id].count==5){
         startTurtle("B");
-    }
+    }*/
     
 }
 

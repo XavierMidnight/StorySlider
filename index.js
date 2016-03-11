@@ -7,6 +7,9 @@ function setup(){
 var letterTemplateObject = document.getElementById("letterTemplate");
 var lettersInputButtonsDiv = document.getElementById("letters");
 
+var buttonColorR=0;
+var buttonColorG=0;
+var buttonColorB=0;
 
 for(var i=1;i<=1000;i++){
     //var letterCharacter=String.fromCharCode(96+i);
@@ -26,6 +29,22 @@ for(var i=1;i<=1000;i++){
     letterObject.id = letterCharacter;
     letterObject.style.width="60px";
     letterObject.style.height="60px";
+    /*
+    buttonColorR=i;
+    if (i%10){
+        buttonColorG=buttonColorG+1;
+        
+    }
+    if(i%100){
+        buttonColorB=buttonColorB+1;
+    }*/
+   
+    //function makeColorGradient(frequency1, frequency2, frequency3,
+    //                         phase1, phase2, phase3,
+    //                         center, width, len)
+    letterObject.style.backgroundColor="rgb("+makeColorGradient(i,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+    
+    //letterObject.style.backgroundColor="rgb("+buttonColorR*(i%2)+","+buttonColorG*(i%3)+","+buttonColorB*(i%5)+")";
     
     
     letterObject.appendChild(letterNameObject);
@@ -209,6 +228,21 @@ function updateUI(){
         
         
     } 
+    
+    function makeColorGradient(i,frequency1, frequency2, frequency3,
+                             phase1, phase2, phase3,
+                             center, width)
+  {
+    if (center == undefined)   center = 128;
+    if (width == undefined)    width = 127;
+    
+       var red = Math.floor(Math.sin(frequency1*i + phase1) * width + center);
+       var grn = Math.floor(Math.sin(frequency2*i + phase2) * width + center);
+       var blu = Math.floor(Math.sin(frequency3*i + phase3) * width + center);
+       //alert(red+","+grn+","+blu);
+       return(red+","+grn+","+blu)
+    
+  }
          
         
     

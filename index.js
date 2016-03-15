@@ -29,23 +29,13 @@ for(var i=1;i<=1000;i++){
     letterObject.id = letterCharacter;
     letterObject.style.width="60px";
     letterObject.style.height="60px";
-    /*
-    buttonColorR=i;
-    if (i%10){
-        buttonColorG=buttonColorG+1;
-        
-    }
-    if(i%100){
-        buttonColorB=buttonColorB+1;
-    }*/
-   
+    letterObject.style.border="5px solid rgb("+makeColorGradient(0,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+
+    
     //function makeColorGradient(frequency1, frequency2, frequency3,
     //                         phase1, phase2, phase3,
     //                         center, width, len)
-    letterObject.style.backgroundColor="rgb("+makeColorGradient(i,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
-    
-    //letterObject.style.backgroundColor="rgb("+buttonColorR*(i%2)+","+buttonColorG*(i%3)+","+buttonColorB*(i%5)+")";
-    
+    //letterObject.style.backgroundColor="rgb("+makeColorGradient(i,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
     
     letterObject.appendChild(letterNameObject);
     letterObject.appendChild(document.createElement('br'));
@@ -141,12 +131,28 @@ function onBlur(id){
 
 function increment(id){
     items[id].count++;
+    
+    letterObject = document.getElementById(id);
+    
     document.getElementById(id+"_count").innerHTML="Count:"+items[id].count;
     /*if(id=="A" && items[id].count==10){
         startChicken("A");
     }else if(id=="B" && items[id].count==5){
         startTurtle("B");
     }*/
+    letterObject.style.backgroundColor="rgb("+makeColorGradient(items[id].count,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+   
+   //solid double dotted dashed groove 
+    if(items[id].count/22>(22*1)){
+         letterObject.style.border="5px double rgb("+makeColorGradient(items[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+    }else if(items[id].count/22>(22*2)){
+         letterObject.style.border="5px double rgb("+makeColorGradient(items[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+    }else if(items[id].count/22>(22*1)){
+        letterObject.style.border="5px double rgb("+makeColorGradient(items[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";    
+    }else{
+        letterObject.style.border="5px solid rgb("+makeColorGradient(items[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+    }
+    //border: 2px solid rgb("+makeColorGradient(items[id].count,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+");
     
 }
 

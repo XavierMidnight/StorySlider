@@ -1,118 +1,57 @@
 var items = [];
-    var focusedItemId;
-
 
 function setup(){
+//TIL use weird spacing on for loop for intellisense coloring
+    for (var  i=1;i <= 1000;i++) {
+        //var letterCharacter=String.fromCharCode(96+i);
+        //var letterCharacter=Math.floor(Math.random()*100);
+        var letterCharacter=String(i);
+    
+        var letterNameObject = document.createElement('span');
+        letterNameObject.id = letterCharacter+"_name";
+        letterNameObject.innerHTML="name:"+letterCharacter+" ";
+        
+        
+        var letterCountObject = document.createElement('span');
+        letterCountObject.id = letterCharacter+"_count";
+        letterCountObject.innerHTML = "Count:0 ";
+        
+        var letterObject = document.createElement('button');
+        letterObject.id = letterCharacter;
+        letterObject.style.width="60px";
+        letterObject.style.height="60px";
+        letterObject.style.border="5px solid rgb("+makeColorGradient(0,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+        
+        //function makeColorGradient(frequency1, frequency2, frequency3,
+        //                         phase1, phase2, phase3,
+        //                         center, width, len)
+        
+        letterObject.appendChild(letterNameObject);
+        letterObject.appendChild(document.createElement('br'));
+        letterObject.appendChild(letterCountObject);
+        
+        //letterObject.innerHTML = letterNameObject.innerHTML+letterCountObject.innerHTML;
+    
+        letterObject.onmouseleave = 
+        function(){
+            onBlur(this.id);
+            };   
+    
+        document.getElementById("letters").appendChild(letterObject);
 
-var letterTemplateObject = document.getElementById("letterTemplate");
-var lettersInputButtonsDiv = document.getElementById("letters");
-
-var buttonColorR=0;
-var buttonColorG=0;
-var buttonColorB=0;
-
-for(var i=1;i<=1000;i++){
-    //var letterCharacter=String.fromCharCode(96+i);
-    //var letterCharacter=Math.floor(Math.random()*100);
-    var letterCharacter=String(i);
-  
-    var letterNameObject = document.createElement('span');
-    letterNameObject.id = letterCharacter+"_name";
-    letterNameObject.innerHTML="name:"+letterCharacter+" ";
-    
-    
-    var letterCountObject = document.createElement('span');
-    letterCountObject.id = letterCharacter+"_count";
-    letterCountObject.innerHTML = "Count:0 ";
-    
-    var letterObject = document.createElement('button');
-    letterObject.id = letterCharacter;
-    letterObject.style.width="60px";
-    letterObject.style.height="60px";
-    letterObject.style.border="5px solid rgb("+makeColorGradient(0,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
-
-    
-    //function makeColorGradient(frequency1, frequency2, frequency3,
-    //                         phase1, phase2, phase3,
-    //                         center, width, len)
-    //letterObject.style.backgroundColor="rgb("+makeColorGradient(i,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
-    
-    letterObject.appendChild(letterNameObject);
-    letterObject.appendChild(document.createElement('br'));
-    letterObject.appendChild(letterCountObject);
-    
-    //letterObject.innerHTML = letterNameObject.innerHTML+letterCountObject.innerHTML;
-   
-    letterObject.onmouseleave = 
-    function(){
-        onBlur(this.id);
-        };   
-   
-    document.getElementById("letters").appendChild(letterObject);
-
-    var item = {
-    id:letterCharacter+"_name",
-    count:0
-    };
-    
-    items[String(letterCharacter)]=item;
-} 
-/*
+        var item = {
+        id:letterCharacter+"_name",
+        count:0
+        };
+        
+        items[String(letterCharacter)]=item;
+    } 
+    /*
 var xmlString = "<div id='foo'><a href='#'>Link</a><span></span></div>"
   , parser = new DOMParser()
   , newLetterOjbect = parser.parseFromString(xmlString, "text/xml");
 */
-/*    
-  var item = {
-    id:"A",
-    count:0
-    
-};
 
-
-
-items["A"]=item;
-
-var item = {
-    id:"B",
-    count:0
-    
-};
-
-items["B"]=item;
-var item = {
-    id:"C",
-    count:0
-    
-};
-
-items["C"]=item;
- 
-for(var i=0;i<26;i++){
-var letter=String.fromCharCode(96+i);
-  
-  var item = {
-    id:letter,
-    count:0
-    
-    };
-
-items[letter]=item;
-} 
- 
- /*
-for(var i=0;i<20;i++){
-var randomLetter=String.fromCharCode(97+Math.floor(Math.random()*26));
-  
-  var item = {
-    id:randomLetter,
-    count:0
-    
-    };
-
-items[randomLetter]=item;
-}
-*/    
 }
 
 var words = [];

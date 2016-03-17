@@ -1,23 +1,29 @@
 var items = [];
 
-function setup(){
+function setup(uniqueLetters){
 //TIL use weird spacing on for loop for intellisense coloring
-    for (var  i=1;i <= 1000;i++) {
-        //var letterCharacter=String.fromCharCode(96+i);
-        //var letterCharacter=Math.floor(Math.random()*100);
-        var letterCharacter=String(i);
-    
+    for (var  i=0;i < uniqueLetters.length;i++) {
+        //var letterId=String.fromCharCode(96+i);
+        //var letterId=Math.floor(Math.random()*100);
+        var letterId=String(i);
+        var letterCharacter = uniqueLetters[i];
+        if(uniqueLetters[i]==" "){
+            letterCharacter="space";    
+        }
+        
         var letterNameObject = document.createElement('span');
-        letterNameObject.id = letterCharacter+"_name";
-        letterNameObject.innerHTML="name:"+letterCharacter+" ";
+        letterNameObject.id = letterId+"_name";
+        //letterNameObject.innerHTML="name:"+"<span style='color:blue'/>"+letterCharacter+" "+"</span>";
+        letterNameObject.innerHTML="<span style='color:blue;font-size:14'/>"+letterCharacter+" "+"</span>";
+
         
         
         var letterCountObject = document.createElement('span');
-        letterCountObject.id = letterCharacter+"_count";
+        letterCountObject.id = letterId+"_count";
         letterCountObject.innerHTML = "Count:0 ";
         
         var letterObject = document.createElement('button');
-        letterObject.id = letterCharacter;
+        letterObject.id = letterId;
         letterObject.style.width="60px";
         letterObject.style.height="60px";
         letterObject.style.border="5px solid rgb("+makeColorGradient(0,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
@@ -40,11 +46,11 @@ function setup(){
         document.getElementById("letters").appendChild(letterObject);
 
         var item = {
-        id:letterCharacter+"_name",
+        id:letterId+"_name",
         count:0
         };
         
-        items[String(letterCharacter)]=item;
+        items[String(letterId)]=item;
     } 
     /*
 var xmlString = "<div id='foo'><a href='#'>Link</a><span></span></div>"
@@ -54,12 +60,67 @@ var xmlString = "<div id='foo'><a href='#'>Link</a><span></span></div>"
 
 }
 
+var story = "";
+var sentences = [];
 var words = [];
+var letters = [];
 function importStory(){
-    words = document.getElementById("story").value.split(" ");
+    story=document.getElementById("story").value;
+    sentences = story.split(/([.?!])/); //end marks appear in next section 
+    //todo words on a per sentence basis, instead of all words.
+    words = story.split(" ");
+  
+    letters = story.toLowerCase().split("");
+    
+    uniqueLetters = uniq_fast(letters);
+    setup(uniqueLetters);
+    
+    words.sort(compareSmallWordsToBigWords);
     words.forEach(function(element) {
       addOption(element)  
     }, this);
+    
+    
+}
+
+function clearStory(){
+    var select = document.getElementById('dictionary');
+    var len = select.length;
+    for(var i=0;i <len;i++){
+        select.remove(0);      
+     }
+    
+    document.getElementById("letters").innerHTML="";
+        
+}
+
+function compareSmallWordsToBigWords(a, b){
+    if(a.length==b.length){
+        if(a.toUpperCase() <b.toUpperCase()){
+            return -1;
+        }else{
+            return 1;
+        }
+        
+        
+    }
+    return a.length-b.length
+}
+
+function uniq_fast(a) {
+    var seen = {};
+    var out = [];
+    var len = a.length;
+    var j = 0;
+    for(var i = 0; i < len; i++) {
+         var item = a[i];
+         if(seen[item] !== 1) {
+               seen[item] = 1;
+               out[j++] = item;
+         }
+    }
+    return out.sort();
+    //return out;
 }
 
 function onBlur(id){
@@ -93,7 +154,34 @@ function increment(id){
     }
     //border: 2px solid rgb("+makeColorGradient(items[id].count,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+");
     
+    //unlockWord("My");
 }
+
+function unlockWord(word){
+    var select = document.getElementById('dictionary');          
+
+    
+    for(var i=0;i <select.length;i++){
+        if(select[i].value==word){
+             select.remove(i);      
+        }
+    }
+    
+    /*
+    select.options.forEach(function(element) {
+        if(element.value==word){
+            select.remove(element.index);    
+        }
+    }, this);
+    */
+   /* f {
+    if(options[i].value === someValue) {
+        options[i].selected = true;
+        break;
+    }*/
+}
+    
+
 
 function updateUI(){
     for (var itemId in items) {

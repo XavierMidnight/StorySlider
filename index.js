@@ -1,6 +1,7 @@
-var items = [];
-
-function setup(uniqueLetters){
+var lettersResource = [];
+var lettersResourceIndex = [];
+var uniqueLetters = [];
+function setup(){
 //TIL use weird spacing on for loop for intellisense coloring
     for (var  i=0;i < uniqueLetters.length;i++) {
         //var letterId=String.fromCharCode(96+i);
@@ -47,10 +48,76 @@ function setup(uniqueLetters){
 
         var item = {
         id:letterId+"_name",
+        character:letterCharacter,
         count:0
         };
         
-        items[String(letterId)]=item;
+        lettersResource[String(letterId)]=item;
+        
+        lettersResourceIndex[letterCharacter]=i;
+    } 
+    /*
+var xmlString = "<div id='foo'><a href='#'>Link</a><span></span></div>"
+  , parser = new DOMParser()
+  , newLetterOjbect = parser.parseFromString(xmlString, "text/xml");
+*/
+
+}
+
+function refreshLettersResource(){
+//TIL use weird spacing on for loop for intellisense coloring
+    for (var  i=0;i < uniqueLetters.length;i++) {
+        //var letterId=String.fromCharCode(96+i);
+        //var letterId=Math.floor(Math.random()*100);
+        var letterId=String(i);
+        var letterCharacter = uniqueLetters[i];
+        if(uniqueLetters[i]==" "){
+            letterCharacter="space";    
+        }
+        
+        var letterNameObject = document.createElement('span');
+        letterNameObject.id = letterId+"_name";
+        //letterNameObject.innerHTML="name:"+"<span style='color:blue'/>"+letterCharacter+" "+"</span>";
+        letterNameObject.innerHTML="<span style='color:blue;font-size:14'/>"+letterCharacter+" "+"</span>";
+
+        
+        
+        var letterCountObject = document.createElement('span');
+        letterCountObject.id = letterId+"_count";
+        letterCountObject.innerHTML = "Count:0 ";
+        
+        var letterObject = document.createElement('button');
+        letterObject.id = letterId;
+        letterObject.style.width="60px";
+        letterObject.style.height="60px";
+        letterObject.style.border="5px solid rgb("+makeColorGradient(0,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+        
+        //function makeColorGradient(frequency1, frequency2, frequency3,
+        //                         phase1, phase2, phase3,
+        //                         center, width, len)
+        
+        letterObject.appendChild(letterNameObject);
+        letterObject.appendChild(document.createElement('br'));
+        letterObject.appendChild(letterCountObject);
+        
+        //letterObject.innerHTML = letterNameObject.innerHTML+letterCountObject.innerHTML;
+    
+        letterObject.onmouseleave = 
+        function(){
+            onBlur(this.id);
+            };   
+    
+        document.getElementById("letters").appendChild(letterObject);
+
+        var item = {
+        id:letterId+"_name",
+        character:letterCharacter,
+        count:0
+        };
+        
+        lettersResource[String(letterId)]=item;
+        
+        lettersResourceIndex[letterCharacter]=i;
     } 
     /*
 var xmlString = "<div id='foo'><a href='#'>Link</a><span></span></div>"
@@ -73,7 +140,7 @@ function importStory(){
     letters = story.toLowerCase().split("");
     
     uniqueLetters = uniq_fast(letters);
-    setup(uniqueLetters);
+    setup();
     
     words.sort(compareSmallWordsToBigWords);
     words.forEach(function(element) {
@@ -128,64 +195,126 @@ function onBlur(id){
     
 }
 
+function unlockWord(){
+    
+    for(var m=0; m <words.length; m++) {
+            
+            word = words[m];
+            var wordUnlock=true;
+            for(var i = 0; i < word.length; i++){
+                var letter = word.charAt(i).toLowerCase();
+                var index = lettersResourceIndex[letter];
+                if ((lettersResource[index].count-1)>=0){
+                    continue;
+                }else{
+                    wordUnlock=false;
+                    break;
+                }
+            }     
+            if (wordUnlock){
+                success(word);
+                
+                for(var j = 0; j < word.length; j++){
+                    var letter = word.charAt(j).toLowerCase();
+                    
+                    var index = lettersResourceIndex[letter];
+                    lettersResource[index].count-=1;
+                 } 
+                 
+                 if (m > -1) {
+                    words.splice(m, 1);
+                 }
+                
+                var select = document.getElementById('dictionary');           
+                for(var k=0;k <select.length;k++){
+                    if(select[k].value==word){
+                        select.remove(k);      
+                    }
+                 }            
+            }
+            
+             
+             
+        }  
+}
+
+function success(word){
+    document.getElementById("success").style.display="block";
+    document.getElementById("successWord").innerHTML=word;
+    setTimeout(function() {
+        document.getElementById("success").style.display="none";    
+    }, 1000);
+}
+
+function countLetters(word){
+    //"catterday"
+    //1c 2a 2t 1e 1r 1d 1y
+    word.forEach(function(element) {
+          insertOrAdd(element);  
+        }, this); 
+    
+}
+
+function insertOrAdd(letterRay,letter){
+    if(letterRay.indexOf);        
+}
 
 function increment(id){
-    items[id].count++;
+    lettersResource[id].count++;
     
     letterObject = document.getElementById(id);
     
-    document.getElementById(id+"_count").innerHTML="Count:"+items[id].count;
+    document.getElementById(id+"_count").innerHTML="Count:"+lettersResource[id].count;
     /*if(id=="A" && items[id].count==10){
         startChicken("A");
     }else if(id=="B" && items[id].count==5){
         startTurtle("B");
     }*/
-    letterObject.style.backgroundColor="rgb("+makeColorGradient(items[id].count,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+    letterObject.style.backgroundColor="rgb("+makeColorGradient(lettersResource[id].count,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
    
    //solid double dotted dashed groove 
-    if(items[id].count/22>(22*1)){
-         letterObject.style.border="5px double rgb("+makeColorGradient(items[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
-    }else if(items[id].count/22>(22*2)){
-         letterObject.style.border="5px double rgb("+makeColorGradient(items[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
-    }else if(items[id].count/22>(22*1)){
-        letterObject.style.border="5px double rgb("+makeColorGradient(items[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";    
+    if(lettersResource[id].count/22>(22*1)){
+         letterObject.style.border="5px double rgb("+makeColorGradient(lettersResource[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+    }else if(lettersResource[id].count/22>(22*2)){
+         letterObject.style.border="5px double rgb("+makeColorGradient(lettersResource[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+    }else if(lettersResource[id].count/22>(22*1)){
+        letterObject.style.border="5px double rgb("+makeColorGradient(lettersResource[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";    
     }else{
-        letterObject.style.border="5px solid rgb("+makeColorGradient(items[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+        letterObject.style.border="5px solid rgb("+makeColorGradient(lettersResource[id].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
     }
     //border: 2px solid rgb("+makeColorGradient(items[id].count,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+");
     
-    //unlockWord("My");
-}
-
-function unlockWord(word){
-    var select = document.getElementById('dictionary');          
-
+   
+    unlockWord();
     
-    for(var i=0;i <select.length;i++){
-        if(select[i].value==word){
-             select.remove(i);      
+    for (var  i=0;i < uniqueLetters.length;i++) {
+        var letterId=String(i);
+    
+        letterObject = document.getElementById(letterId);
+    
+        document.getElementById(letterId+"_count").innerHTML="Count:"+lettersResource[letterId].count;
+   
+        letterObject.style.backgroundColor="rgb("+makeColorGradient(lettersResource[letterId].count,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+   
+    //solid double dotted dashed groove 
+        if(lettersResource[letterId].count/22>(22*1)){
+            letterObject.style.border="5px double rgb("+makeColorGradient(lettersResource[letterId].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+        }else if(lettersResource[letterId].count/22>(22*2)){
+            letterObject.style.border="5px double rgb("+makeColorGradient(lettersResource[letterId].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
+        }else if(lettersResource[letterId].count/22>(22*1)){
+            letterObject.style.border="5px double rgb("+makeColorGradient(lettersResource[letterId].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";    
+        }else{
+            letterObject.style.border="5px solid rgb("+makeColorGradient(lettersResource[letterId].count/22,.3,.3,.3,0,2*Math.PI/3,4*Math.PI/3,127,128,0)+")";
         }
     }
-    
-    /*
-    select.options.forEach(function(element) {
-        if(element.value==word){
-            select.remove(element.index);    
-        }
-    }, this);
-    */
-   /* f {
-    if(options[i].value === someValue) {
-        options[i].selected = true;
-        break;
-    }*/
 }
+
     
 
 
 function updateUI(){
-    for (var itemId in items) {
-        document.getElementById(itemId+"_count").value=items[itemId].count;
+    for (var itemId in lettersResource) {
+        document.getElementById(itemId+"_count").value=lettersResource[itemId].count;
     }
 }
  
